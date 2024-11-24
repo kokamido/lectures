@@ -8,7 +8,8 @@
     ],
     "updateContentCommand": {
         "apt_packages": "apt update && apt install -y git",
-        "python_packages": "pip install triton==3.1.0 ipython==8.29.0 black==24.10.0"
+        "enable_git": "git config --global --add safe.directory /workspaces/lectures",
+        "python_packages": "pip install triton==3.1.0 ipython==8.29.0 black==24.10.0 ipykernel==6.29.5"
     },
     "customizations": {
         "vscode": {
