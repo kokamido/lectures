@@ -8,7 +8,7 @@
     ],
     "updateContentCommand": {
         "apt_packages": "apt update && apt install -y git",
-        "python_packages": "pip install triton==3.1.0 ipython==8.29.0 black==24.10.0 ipykernel==6.29.5 pandas==2.2.3 matplotlib==3.9.2"
+        "python_packages": "pip install triton==3.1.0 ipython==8.29.0 black==24.10.0 ipykernel==6.29.5 pandas==2.2.3 matplotlib==3.9.2 numpy==1.26.4"
     },
     "postCreateCommand": {
         "enable_git": "git config --global --add safe.directory /workspaces/lectures",  
