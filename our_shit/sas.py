@@ -68,7 +68,7 @@ def tiling_mm_kernel(
 
 
 def mm_naive(a, b, bs=16):
-    res = torch.empty((a.shape[0], b.shape[1])).to("cuda")
+    res = torch.empty((a.shape[0], b.shape[1]),  device=a.device, dtype=a.dtype)
     grid = lambda meta: (cdiv(a.shape[0], bs),)
     naive_mm_kernel[grid](a, b, res, bs, a.shape[1], b.shape[1])
 
@@ -76,10 +76,10 @@ def mm_naive(a, b, bs=16):
 
 
 def mm_tiling(a, b, bs=16):
-    res = torch.empty((a.shape[0], b.shape[1])).to("cuda")
+    res = torch.empty((a.shape[0], b.shape[1]),  device=a.device, dtype=a.dtype)
     grid = lambda meta: (cdiv(a.shape[0], bs), cdiv(b.shape[1], bs))
+    print('ХУЙ', grid('говно'))
     tiling_mm_kernel[grid](a, b, res, bs, a.shape[1], b.shape[1])
-
     return res
 
 
@@ -112,15 +112,15 @@ def benchmark(square_matrix_size, provider):
     quantiles = [0.5, 0.2, 0.8]
     if provider == "naive":
         ms, min_ms, max_ms = triton.testing.do_bench(
-            lambda: mm_naive(a, b), quantiles=quantiles
+            lambda: mm_naive(a, b), quantiles=quantiles, rep=2048
         )
     if provider == "tiling":
         ms, min_ms, max_ms = triton.testing.do_bench(
-            lambda: mm_tiling(a, b), quantiles=quantiles
+            lambda: mm_tiling(a, b), quantiles=quantiles, rep=2048
         )
     if provider == "hui":
-         ms, min_ms, max_ms = triton.testing.do_bench(
-            lambda: matmul(a, b,16,16,16,16), quantiles=quantiles
+        ms, min_ms, max_ms = triton.testing.do_bench(
+            lambda: matmul(a, b,16,16,16,16), quantiles=quantiles, rep=2048
         )
     gbps = lambda ms: 12 * sz / ms * 1e-6
     return gbps(ms), gbps(max_ms), gbps(min_ms)
